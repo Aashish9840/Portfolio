@@ -19,7 +19,7 @@ const AboutUs = () => {
         </section>
         <section className="w-full md:w-[50%] flex flex-col mt-6 gap-1">
           <h1 className="text-3xl font-dmSans">About Me</h1>
-          <p className="text-lg font-dmSans">
+          <p className="text-base font-dmSans">
             I’m Aashish Shah, a passionate Frontend Engineer skilled in React.js
             and Next.js. I specialize in building responsive, high-performance
             web apps. Experienced with Git and GitHub for version control, I
