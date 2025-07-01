@@ -8,6 +8,7 @@
 /* extended colors */
   --color-primary-background:#0C0C08;
   --color-secondary-background:#131313;
+  --color-text:#e34b43;
 
   /* font family */
   --font-dmSans:"DM Sans", sans-serif;
@@ -47,5 +48,11 @@
 @layer components {
   .btn-primary {
     @apply bg-blue-700 text-white px-6 py-1 rounded-md text-lg cursor-pointer hover:bg-blue-600;
+  }
+}
+
+@layer components {
+  .btn-secondary {
+    @apply bg-[#e34b43] text-white px-7 py-[6px] rounded-md text-lg cursor-pointer hover:bg-[#ef8686];
   }
 }
