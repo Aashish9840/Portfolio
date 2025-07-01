@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-const Hero = () => {
-  return <div id="#home">Hero</div>;
-=======
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,7 +46,6 @@ const Hero = () => {
       </section>
     </div>
   );
->>>>>>> herosection
 };
 
 export default Hero;
