@@ -83,7 +83,7 @@ const Skills = () => {
   return (
     <div
       id="skills"
-      className="bg-primary-background text-white md:h-screen pt-[10vh]"
+      className="bg-primary-background text-white h-fit pb-10 lg:h-screen pt-[10vh]"
     >
       <main className="relative container">
         <div className="flex flex-col items-center py-2 mb-10">
@@ -100,7 +100,7 @@ const Skills = () => {
           variants={skillsVariants}
           initial="hidden"
           animate={skillInView ? "visible" : ""}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 md:px-20"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-10 md:px-20"
         >
           {skillslist.map((skills, index) => (
             <motion.div
@@ -142,13 +142,13 @@ const Skills = () => {
               className="fixed inset-0 bg-black/50 flex items-center justify-center z-20 "
               onClick={() => setSelectedSkill(null)}
             >
-              <div className=" p-6 rounded-lg shadow-lg shadow-secondary-background bg-primary-background text-white h-fit w-[20vw]">
+              <div className=" p-6 rounded-lg shadow-lg shadow-secondary-background bg-primary-background text-white h-fit w-[25vw] min-w-[350px]">
                 <Image
                   src={skillslist[selectedSkill].path}
                   height={500}
                   width={500}
                   alt={skillslist[selectedSkill].title}
-                  className="w-full h-[200px] rounded-md mb-4"
+                  className="w-full h-[230px] rounded-md mb-4"
                 />
                 <h2 className="text-2xl font-bold font-dmSans mb-1">
                   {skillslist[selectedSkill].title}
