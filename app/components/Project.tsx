@@ -5,7 +5,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
 import { MoveRight } from "lucide-react";
 
-const ChildProject = ({ project }) => {
+interface ProjectProps {
+  title: string;
+  imagePath: string;
+  description: string;
+  githubLink: string;
+  websiteLink: string;
+}
+const ChildProject = ({ project }: { project: ProjectProps }) => {
   const projectRef = useRef<HTMLDivElement>(null);
   const projectInView = useInView(projectRef, { once: false });
   return (
