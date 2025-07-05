@@ -2,10 +2,65 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useInView } from "motion/react";
+import { MoveRight } from "lucide-react";
+
+const ChildProject = ({ project }) => {
+  const projectRef = useRef<HTMLDivElement>(null);
+  const projectInView = useInView(projectRef, { once: false });
+  return (
+    <motion.div
+      ref={projectRef}
+      initial={{ opacity: 0, y: 100 }}
+      animate={projectInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 1 }}
+      exit={{ opacity: 0, y: 80 }}
+      className="mb-10 flex items-start gap-10 h-[90vh]"
+    >
+      <section className="w-[50%] h-full">
+        <Image
+          src={project.imagePath}
+          height={500}
+          width={500}
+          alt={project.title}
+          className="w-full h-[70%] rounded-lg"
+        />
+      </section>
+      <section className="w-[50%] pt-[12vh]">
+        <h2 className="text-3xl font-bold mb-4">{project.title}</h2>
+        <p className="mb-4">{project.description}</p>
+        <div className="flex gap-4 items-center">
+          <Link
+            href={project.websiteLink}
+            target="blank"
+            className="btn-secondary"
+          >
+            Website
+          </Link>
+          <Link
+            href={project.githubLink}
+            target="blank"
+            className="flex items-center gap-2 text-xl font-dmSans font-medium"
+          >
+            Github
+            <MoveRight size={20} className="text-white" />
+          </Link>
+        </div>
+      </section>
+    </motion.div>
+  );
+};
 
 const Project = () => {
   const Projects = [
+    {
+      title: "Chito Khaja",
+      imagePath: "/project/chito-khaja.jpg",
+      description:
+        "A modern online food ordering application built with Next.js, express, mongodb, and tailwindCss. It allows users to browse a variety of food items, add them to their cart, and place orders seamlessly. The e-sewa payment integration ensures secure transactions while the admin panel provides easy management of food items and orders.",
+      githubLink: "https://github.com/Aashish9840/frontend-Chito-Khaja",
+      websiteLink: "https://movie-site-smoky-five.vercel.app/",
+    },
     {
       title: "MovieApp",
       imagePath: "/project/movieapp.png",
@@ -14,17 +69,8 @@ const Project = () => {
       githubLink: "https://github.com/Aashish9840/movie-site",
       websiteLink: "https://movie-site-smoky-five.vercel.app/",
     },
-    {
-      title: "Chito Khaja",
-      imagePath: "/project/chito-khaja.png",
-      description:
-        "A frontend food ordering interface built with React. It displays a list of Nepali snacks (Khaja) with images, descriptions, and prices. Users can browse items, view item details, and simulate placing an order.",
-      githubLink: "https://github.com/yourusername/chito-khaja",
-      websiteLink: "https://chito-khaja.yourdomain.com",
-    },
   ];
-  const projectRef = useRef<HTMLDivElement>(null);
-  const projectInView
+
   const [variableScreen, setVariableScreen] = useState<number | null>(null);
 
   useEffect(() => {
@@ -41,53 +87,54 @@ const Project = () => {
   }, []);
 
   return (
-    <div
-      id="project"
-      className="bg-secondary-background lg:h-screen text-white pt-[10vh]"
-    >
-      <div className="container">
+    <div id="project" className="bg-secondary-background text-white  ">
+      <div className=" container min-h-screen">
+        <h1 className="sticky top-0 pt-[12vh] bg-secondary-background z-10 left-0 text-center font-semibold text-xl sm:text-3xl font-dmSans pb-6">
+          My Projects
+        </h1>
+
         {variableScreen && variableScreen > 1024 ? (
-          <div className="flex flex-col gap-6 min-h-screen">
-            <h1 className="sticky text-center font-semibold text-xl sm:text-3xl font-dmSans">
-              Projects
-            </h1>
-            <section className="flex flex-col gap-6">
-              {Projects.map((project, index) => (
-                <motion.div
-                  ref={projectRef}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  key={index}
-                  className="mb-10 flex items-center gap-10 h-[80vh] bg-red-300"
-                >
-                  <section>
-                    <Image
-                      src={project.imagePath}
-                      height={500}
-                      width={500}
-                      alt={project.title}
-                      className="w-full h-full rounded-lg"
-                    />
-                  </section>
-                  <section>
-                    <h2 className="text-3xl font-bold mb-4">{project.title}</h2>
-                    <p className="mb-4">{project.description}</p>
-                    <div className="flex gap-4 items-center">
-                      <Link
-                        href={project.websiteLink}
-                        target="blank"
-                        className="btn-secondary"
-                      >
-                        Website
-                      </Link>
-                    </div>
-                  </section>
-                </motion.div>
-              ))}
-            </section>
-          </div>
+          <section className="flex flex-col gap-30 py-4">
+            {Projects.map((project, index) => (
+              <ChildProject key={index} project={project} />
+            ))}
+          </section>
         ) : (
-          <div></div>
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-10 py-10 h-fit">
+            {Projects.map((project, index) => (
+              <div
+                key={index}
+                className=" border border-black rounded-lg shadow-md p-4 h-fit"
+              >
+                <Image
+                  src={project.imagePath}
+                  height={500}
+                  width={500}
+                  alt={project.title}
+                  className="w-full h-[100%] rounded-lg mb-4"
+                />
+                <h2 className="text-xl font-bold mb-2">{project.title}</h2>
+                <p className="mb-4">{project.description}</p>
+                <div className="flex gap-4 items-center">
+                  <Link
+                    href={project.websiteLink}
+                    target="blank"
+                    className="btn-secondary"
+                  >
+                    Website
+                  </Link>
+                  <Link
+                    href={project.githubLink}
+                    target="blank"
+                    className="flex items-center gap-2 text-lg font-dmSans font-medium"
+                  >
+                    Github
+                    <MoveRight size={20} className="text-white" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </section>
         )}
       </div>
     </div>
