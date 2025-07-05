@@ -4,6 +4,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
+interface userData{
+  first_name:string,
+  last_name:string,
+  email:string,
+  contact:string,
+  description:string,
+}
 const ContactUs = () => {
   const formSchema=z.object({
     first_name:z.string().nonempty({message:"first name is required"}).min(6, {message: "first name must be 8 Charaters"}),
@@ -14,8 +21,9 @@ const ContactUs = () => {
       message: "Contact number must start with 98 or 97 and have 10 digits",
     }),
   })
-  const {register, handleSubmit, reset, watch , formState:{errors}}=useForm({resolver:zodResolver(formSchema)})
-  const contactform=(data:any)=>{
+  const {register, handleSubmit, reset, formState:{errors}}=useForm({resolver:zodResolver(formSchema)})
+  const contactform=(data:userData)=>{
+    console.log(data)
 reset()
   }
   return (
@@ -28,7 +36,9 @@ reset()
           Contact Me!
         </h1>
         <section className="flex gap-16 items-start">
-          <form onSubmit={handleSubmit(contactform)} className="w-full md:w-[50%] grid grid-cols-2 gap-5">
+          <div className="flex flex-col gap-4 w-full md:w-[50%]">
+            <h1 className="text-2xl text-center text-red-400 font-semibold font-dmSans">Get in touch with me</h1>
+          <form onSubmit={handleSubmit(contactform)} className=" grid grid-cols-2 gap-5">
             {/* first name */}
             <div className="relative flex flex-col gap-2">
               <label htmlFor="" className="font-medium font-dmSans txt-lg">First Name</label>
@@ -72,6 +82,8 @@ reset()
             <button className="col-span-2 btn-secondary" type="submit">Submit</button>
 
           </form>
+          </div>
+        
 
           <main className="hidden md:block w-[40%] mx-auto">
             <h1 className="text-2xl text-red-400 font-semibold font-dmSans">Contact Details</h1>
