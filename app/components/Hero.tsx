@@ -1,8 +1,42 @@
+'use client'
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {motion} from "motion/react"
 const Hero = () => {
+  const text="Frontend Developer"
+    const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setKey((prev) => prev + 1);
+    }, 5000); 
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const parentVarients = {
+  hidden: { opacity: 1},
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      repeat: Infinity,
+      duration:4
+    },
+  },
+};
+
+const letter = {
+  hidden: { opacity: 0, y:20, x:20 },
+  visible: {
+    opacity: 1,
+    y:0,
+    x:0,
+  },
+};
+  
   return (
     <div
       id="#home"
@@ -12,7 +46,19 @@ const Hero = () => {
         <div>
           <h1 className="font-semibold font-inter text-2xl sm:text-4xl leading-10 md:leading-14">
             <span className="text-text">Hello!</span> I am Aashish Shah working
-            as <span>frontEnd Developer</span>
+            as <motion.span
+            key={key}
+            initial="hidden"
+            animate="visible"
+            variants={parentVarients}
+            >
+
+{text.split("").map((char, index) => (
+          <motion.span key={index} variants={letter} className="inline-block">
+            {char === " " ? "\u00A0" : char}
+          </motion.span>
+        ))}
+            </motion.span>
           </h1>
 
           <p className="font-dmSans font-medium text-base sm:text-lg">

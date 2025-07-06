@@ -44,12 +44,12 @@ const Header = () => {
     <div className=" fixed z-20 bg-primary-background w-screen border-b border-b-white/90 text-white h-[10vh] flex items-center">
       <div className=" px-6 md:px-0 container flex justify-between items-center">
         <section className="">
-          <a
+          <Link
             href="#home"
             className="text-[#e34b43] cursor-pointer text-2xl font-dmSans font-semibold"
           >
             PortFolio
-          </a>
+          </Link>
         </section>
         <section className="hidden md:flex gap-20 items-center">
           <div className="flex gap-6 lg:gap-10 items-center">
