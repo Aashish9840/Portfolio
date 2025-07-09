@@ -81,12 +81,12 @@ const letter = {
 
       <section className="w-full md:w-[50vw] h-full py-10">
         <Image
-          src="/portfolio/portfolio.jpg"
+          src="/portfolio/technology.jpg"
           height={500}
           width={500}
           alt="portfolio"
           priority
-          className=" h-[400px] md:h-full w-full object-cover aspect-square rounded-md"
+          className=" h-[400px] md:h-[600px] w-full object-contain rounded-md"
         />
       </section>
     </div>

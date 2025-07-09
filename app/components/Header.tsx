@@ -28,7 +28,7 @@ const Header = () => {
       links: "#about",
     },
     {
-      title: "SKills",
+      title: "Skills",
       links: "#skills",
     },
     {

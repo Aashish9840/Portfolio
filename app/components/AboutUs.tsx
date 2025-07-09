@@ -51,7 +51,7 @@ const AboutUs = () => {
           animate={aboutInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.5 }}
           ref={aboutRef}
-          className="w-full md:w-[50%] flex flex-col mt-4 md:mt-10 gap-6"
+          className="w-full md:w-[50%] flex flex-col mt-4 lg:mt-10 gap-6"
         >
           <div>
             <h1 className="text-3xl font-dmSans font-semibold">About Me</h1>

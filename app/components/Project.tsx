@@ -66,7 +66,7 @@ const Project = () => {
       description:
         "A modern online food ordering application built with Next.js, express, mongodb, and tailwindCss. It allows users to browse a variety of food items, add them to their cart, and place orders seamlessly. The e-sewa payment integration ensures secure transactions while the admin panel provides easy management of food items and orders.",
       githubLink: "https://github.com/Aashish9840/frontend-Chito-Khaja",
-      websiteLink: "https://movie-site-smoky-five.vercel.app/",
+      websiteLink: "https://frontend-chito-khaja.vercel.app/",
     },
     {
       title: "MovieApp",
