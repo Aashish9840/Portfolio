@@ -1,95 +1,111 @@
-'use client'
-import { MoveRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import {motion} from "motion/react"
+"use client";
+import { motion } from "motion/react";
+import { ArrowDown } from "lucide-react";
+import { profile } from "../data/profile";
+import Magnetic from "./Magnetic";
+
+const ease = [0.22, 1, 0.36, 1] as const;
+const nameLines = ["Aashish", "Shah"];
+
 const Hero = () => {
-  const text="Frontend Developer"
-    const [key, setKey] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setKey((prev) => prev + 1);
-    }, 5000); 
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const parentVarients = {
-  hidden: { opacity: 1},
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      repeat: Infinity,
-      duration:4
-    },
-  },
-};
-
-const letter = {
-  hidden: { opacity: 0, y:20, x:20 },
-  visible: {
-    opacity: 1,
-    y:0,
-    x:0,
-  },
-};
-  
   return (
-    <div
-      id="#home"
-      className="container flex flex-col md:flex-row items-center justify-between gap-4 md:gap-10 text-white md:h-screen pt-[10vh] "
+    <section
+      id="home"
+      className="container relative flex min-h-svh flex-col justify-end pb-12 pt-32"
     >
-      <section className=" w-full md:w-[50vw] flex flex-col gap-10 pt-4">
-        <div>
-          <h1 className="font-semibold font-inter text-2xl sm:text-4xl leading-10 md:leading-14">
-            <span className="text-text">Hello!</span> I am Aashish Shah working
-            as <motion.span
-            key={key}
-            initial="hidden"
-            animate="visible"
-            variants={parentVarients}
-            >
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="mb-6 flex items-center gap-3 text-base text-muted"
+      >
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
+        </span>
+        Open to frontend roles, in Nepal or remote
+      </motion.p>
 
-{text.split("").map((char, index) => (
-          <motion.span key={index} variants={letter} className="inline-block">
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
+      {/* The one loud moment on the page: the name, revealed letter by letter */}
+      <h1
+        data-cursor="lens"
+        aria-label={profile.name}
+        className="text-[clamp(4.5rem,21vw,19rem)] font-extrabold leading-[0.82] tracking-[-0.025em]"
+        style={{ fontVariationSettings: '"wdth" 75, "opsz" 96' }}
+      >
+        {nameLines.map((line, lineIndex) => (
+          <span key={line} aria-hidden className="block overflow-hidden pb-[0.06em]">
+            {line.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                className="inline-block"
+                initial={{ y: "105%" }}
+                animate={{ y: 0 }}
+                transition={{
+                  duration: 0.9,
+                  ease,
+                  delay: 0.2 + lineIndex * 0.25 + i * 0.04,
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </span>
         ))}
-            </motion.span>
-          </h1>
+      </h1>
 
-          <p className="font-dmSans font-medium text-base sm:text-lg">
-            Being a frontend Developer, I have interest in creating a
-            responsive, optimized and attractive websites. I priortize in
-            implementing UI with simple web functionality.
-          </p>
-        </div>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1.1, ease, delay: 0.9 }}
+        className="mt-8 h-[3px] origin-left bg-accent"
+      />
 
-        <div className="flex items-center gap-6">
-          <Link href="#about" className="btn-secondary">
-            About
-          </Link>
-          <Link href="#contact" className="flex items-center gap-1">
-            <h1 className="text-lg font-dmSans font-medium">Contact</h1>
-            <MoveRight size={20} className="text-white cursor-pointer" />
-          </Link>
-        </div>
-      </section>
+      <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 1.1 }}
+          className="max-w-[34ch] text-xl leading-snug text-muted sm:text-2xl"
+        >
+          <span className="text-ink">Frontend developer in {profile.location}.</span>{" "}
+          I build fast, accessible interfaces with React and Next.js, and I&apos;m
+          working my way toward full-stack.
+        </motion.p>
 
-      <section className="w-full md:w-[50vw] h-full py-10">
-        <Image
-          src="/portfolio/technology.jpg"
-          height={500}
-          width={500}
-          alt="portfolio"
-          priority
-          className=" h-[400px] md:h-[600px] w-full object-contain rounded-md"
-        />
-      </section>
-    </div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease, delay: 1.25 }}
+          className="flex flex-wrap items-center gap-3"
+        >
+          <Magnetic>
+            <a href="#work" className="btn-primary">
+              See my work
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a href="#contact" className="btn-ghost">
+              Get in touch
+            </a>
+          </Magnetic>
+        </motion.div>
+      </div>
+
+      <motion.a
+        href="#about"
+        aria-label="Scroll to About"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 6, 0] }}
+        transition={{
+          opacity: { delay: 1.6 },
+          y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1.6 },
+        }}
+        className="mt-12 hidden h-11 w-11 place-items-center self-start rounded-full border border-line text-muted md:grid"
+      >
+        <ArrowDown size={18} />
+      </motion.a>
+    </section>
   );
 };
 

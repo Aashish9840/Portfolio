@@ -1,27 +1,35 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+import Providers from "./components/Providers";
+import CustomCursor from "./components/CustomCursor";
+import ScrollProgress from "./components/ScrollProgress";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  axes: ["opsz", "wdth"],
 });
 
 export const metadata: Metadata = {
-  title: "PortFolio",
+  title: "Aashish Shah | Frontend developer",
   description:
-    "This is my portfolio showing my work, experience, and my details",
+    "Frontend developer in Bhaktapur, Nepal, building React and Next.js interfaces.",
   icons: {
     icon: "/portfolio_icon.png",
     shortcut: "/portfolio_icon.png",
     apple: "/portfolio_icon.png",
   },
+  openGraph: {
+    title: "Aashish Shah | Frontend developer",
+    description:
+      "Frontend developer in Bhaktapur, Nepal, building React and Next.js interfaces.",
+    type: "website",
+  },
 };
+
+// Runs before paint so the saved theme never flashes. Dark is the default.
+const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light")document.documentElement.classList.add("dark")}catch(e){document.documentElement.classList.add("dark")}})()`;
 
 export default function RootLayout({
   children,
@@ -29,11 +37,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className={`${bricolage.variable} font-sans antialiased`}>
+        <Providers>
+          <ScrollProgress />
+          <CustomCursor />
+          {children}
+        </Providers>
       </body>
     </html>
   );

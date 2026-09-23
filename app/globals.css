@@ -1,58 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 @import "tailwindcss";
 
-@theme{
-/* extended colors */
-  --color-primary-background:#0C0C08;
-  --color-secondary-background:#131313;
-  --color-text:#e34b43;
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* font family */
-  --font-dmSans:"DM Sans", sans-serif;
-  --font-commissioner:"Commissioner", sans-serif;
-  --font-inter:"Inter", sans-serif;
---font-bitcount:"Bitcount Grid Double", system-ui;
---font-openSans:"Open Sans", sans-serif;
+/* Theme tokens: light is the base, .dark on <html> overrides */
+:root {
+  --bg: #eeeff4;
+  --surface: #ffffff;
+  --ink: #15172b;
+  --muted: #595c72;
+  --line: #d4d6e2;
+  --accent: #f2a30f;
+  --accent-ink: #9a5b00;
+  --on-accent: #15172b;
 }
 
+.dark {
+  --bg: #12142a;
+  --surface: #1b1e38;
+  --ink: #ecedf5;
+  --muted: #9a9db5;
+  --line: #2c3052;
+  --accent: #ffb224;
+  --accent-ink: #ffc65c;
+  --on-accent: #12142a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: light;
+  scroll-padding-top: 5rem;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Keyboard focus: always visible, on-brand */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* The custom cursor replaces the native one only on fine pointers,
+   and only once the cursor component has mounted */
+html.has-cursor,
+html.has-cursor a,
+html.has-cursor button,
+html.has-cursor [data-cursor] {
+  cursor: none;
+}
+html.has-cursor input,
+html.has-cursor textarea {
+  cursor: text;
+}
 
 @layer utilities {
   .container {
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
 
-    @media (min-width: 640px) {
-      max-width: 660px;
-    }
     @media (min-width: 768px) {
-      max-width: 820px;
-    }
-    @media (min-width: 1024px) {
-      max-width: 1020px;
-    }
-    @media (min-width: 1280px) {
-      max-width: 1150px;
-    }
-    @media (min-width: 1300px) {
-      max-width: 1300px;
+      padding-inline: 2.5rem;
     }
   }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold transition-colors duration-200;
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-700 text-white px-6 py-1 rounded-md text-lg cursor-pointer hover:bg-blue-600;
+    @apply btn bg-accent text-on-accent hover:bg-ink hover:text-bg;
   }
-}
-
-@layer components {
-  .btn-secondary {
-    @apply bg-[#e34b43] text-white px-7 py-[6px] rounded-md text-lg cursor-pointer hover:bg-[#ef8686];
+  .btn-ghost {
+    @apply btn border border-line text-ink hover:border-ink;
+  }
+  .link {
+    @apply font-semibold text-ink underline decoration-accent decoration-2 underline-offset-[6px] transition-colors hover:text-accent-ink;
+  }
+  .section-title {
+    @apply text-4xl font-bold tracking-tight sm:text-5xl;
+    font-variation-settings: "wdth" 85;
   }
 }

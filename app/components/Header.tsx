@@ -1,137 +1,153 @@
 "use client";
-import { Menu } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
+import React, { useEffect, useState } from "react";
+import { navLinks, profile } from "../data/profile";
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
-  const [matchLink, setMatchLink] = useState<string | null>("Home");
-  const [showMobileLinks, setShowMobileLinks] = useState<boolean | null>(false);
-  const mobileMenu = useRef<HTMLDivElement | null>(null);
+  const [active, setActive] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => setScrolled(latest > 24));
+
+  // Highlight whichever section is crossing the middle of the viewport
   useEffect(() => {
-    const closemenu = (e: MouseEvent) => {
-      if (!mobileMenu?.current?.contains(e.target as Node)) {
-        setShowMobileLinks(false);
-      }
-    };
-    document.addEventListener("mousedown", closemenu);
-    return () => document.removeEventListener("mousedown", closemenu);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    ["home", ...navLinks.map((l) => l.id)].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
-  const links = [
-    {
-      title: "Home",
-      links: "#home",
-    },
-    {
-      title: "About",
-      links: "#about",
-    },
-    {
-      title: "Skills",
-      links: "#skills",
-    },
-    {
-      title: "Project",
-      links: "#project",
-    },
-    {
-      title: "Contact",
-      links: "#contact",
-    },
-  ];
-  return (
-    <div className=" fixed z-20 bg-primary-background w-screen border-b border-b-white/90 text-white h-[10vh] flex items-center">
-      <div className=" px-6 md:px-0 container flex justify-between items-center">
-        <section className="">
-          <Link
-            href="#home"
-            className="text-[#e34b43] cursor-pointer text-2xl font-dmSans font-semibold"
-          >
-            PortFolio
-          </Link>
-        </section>
-        <section className="hidden md:flex gap-20 items-center">
-          <div className="flex gap-6 lg:gap-10 items-center">
-            {links.map((link, index) => (
-              <Link
-                href={link.links}
-                key={index}
-                className={`text-white font-semibold font-dmSans ${
-                  matchLink === link.title
-                    ? "border-b-[#e34b43] border-b-2"
-                    : ""
-                }`}
-                onClick={() => setMatchLink(link.title)}
-              >
-                {link.title}
-              </Link>
-            ))}
-          </div>
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line bg-bg/75 py-3 backdrop-blur-md"
+          : "border-b border-transparent py-5"
+      }`}
+    >
+      <div className="container flex items-center justify-between">
+        <a href="#home" className="text-lg font-bold tracking-tight">
+          Aashish<span className="text-accent">.</span>
+        </a>
+
+        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              aria-current={active === link.id ? "true" : undefined}
+              className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                active === link.id ? "text-ink" : "text-muted hover:text-ink"
+              }`}
+            >
+              {active === link.id && (
+                <motion.span
+                  layoutId="nav-pill"
+                  className="absolute inset-0 -z-10 rounded-full bg-surface"
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                />
+              )}
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
           <a
-            href="/CV/Cv-(Aashish Shah).pdf"
+            href={profile.cvPath}
             target="_blank"
-            className="btn-primary"
+            rel="noopener noreferrer"
+            className="btn-primary hidden !py-2 text-sm md:inline-flex"
           >
             Download CV
           </a>
-        </section>
-
-        {/* menu icons for mobile view */}
-        <section className="block md:hidden">
-          <div
-            className=" cursor-pointer "
-            onClick={() => setShowMobileLinks(true)}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={menuOpen}
+            className="grid h-10 w-10 place-items-center rounded-full border border-line md:hidden"
           >
-            <Menu size={30} />
-          </div>
-          <AnimatePresence>
-            {showMobileLinks && (
-              <motion.div
-                ref={mobileMenu}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
-                transition={{ duration: 0.5 }}
-                className=" fixed top-0 right-0 bg-black/90 z-30 bottom-0 w-[50vw] flex flex-col gap-2"
-              >
-                <div className="flex flex-col gap-2 pt-4">
-                  {links.map((link, index) => (
-                    <Link
-                      href={link.links}
-                      key={index}
-                      className={` font-semibold font-dmSans px-10 py-4 ${
-                        matchLink === link.title
-                          ? "text-[#e34b43] "
-                          : "text-white"
-                      }`}
-                      onClick={() => {
-                        setMatchLink(link.title);
-                        setTimeout(() => {
-                          setShowMobileLinks(false);
-                        }, 100);
-                      }}
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
-                </div>
-                <div className="pl-10">
-                  <a
-                    href="/CV/Cv-(Aashish Shah).pdf"
-                    target="_blank"
-                    className="btn-primary"
-                  >
-                    Download CV
-                  </a>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
+            <Menu size={18} />
+          </button>
+        </div>
       </div>
-    </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ clipPath: "circle(0% at calc(100% - 2.5rem) 2.5rem)" }}
+            animate={{ clipPath: "circle(150% at calc(100% - 2.5rem) 2.5rem)" }}
+            exit={{ clipPath: "circle(0% at calc(100% - 2.5rem) 2.5rem)" }}
+            transition={{ duration: 0.5, ease: [0.65, 0, 0.35, 1] }}
+            className="fixed inset-0 z-50 flex flex-col bg-accent px-6 py-5 text-on-accent md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+          >
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                autoFocus
+                className="grid h-10 w-10 place-items-center rounded-full border border-on-accent/30"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <nav aria-label="Mobile" className="mt-10 flex flex-col gap-2">
+              {navLinks.map((link, i) => (
+                <motion.a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + i * 0.06 }}
+                  className="text-5xl font-bold tracking-tight"
+                >
+                  {link.label}
+                </motion.a>
+              ))}
+            </nav>
+            <a
+              href={profile.cvPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn mt-auto bg-on-accent text-accent"
+            >
+              Download CV
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
 
